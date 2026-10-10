@@ -1,0 +1,5 @@
+-keep class com.miku.android.settings.MikuSettingsApplication {
+    *;
+}
+
+-keep class com.miku.android.settings.** { *; }
