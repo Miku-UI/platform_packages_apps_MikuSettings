@@ -96,6 +96,7 @@ public class MikuTopLevelSettings extends TopLevelSettings {
         recyclerView.addItemDecoration(new MikuHomepageGridSpacing(recyclerView.getContext()));
         applyGridPadding(/* extraHorizontal= */ 0);
         tintHomepageScrollBackground(recyclerView);
+        attachViewportTracking(recyclerView);
         return recyclerView;
     }
 
@@ -212,6 +213,54 @@ public class MikuTopLevelSettings extends TopLevelSettings {
         }
     }
 
+    private void attachViewportTracking(RecyclerView recyclerView) {
+        recyclerView.addOnLayoutChangeListener(
+                (v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
+                    if (mAdapter != null) {
+                        mAdapter.scheduleViewportPass();
+                    }
+                });
+        recyclerView.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
+            @Override
+            public void onViewAttachedToWindow(View v) {
+                final NestedScrollView scroll = homepageScroll(v);
+                if (scroll == null) {
+                    return;
+                }
+                scroll.setOnScrollChangeListener((NestedScrollView nested,
+                        int scrollX, int scrollY, int oldScrollX, int oldScrollY) -> {
+                    if (mAdapter != null) {
+                        mAdapter.onViewportChanged();
+                    }
+                });
+                if (mAdapter != null) {
+                    mAdapter.scheduleViewportPass();
+                }
+            }
+
+            @Override
+            public void onViewDetachedFromWindow(View v) {
+                final NestedScrollView scroll = homepageScroll(v);
+                if (scroll != null) {
+                    scroll.setOnScrollChangeListener(
+                            (NestedScrollView.OnScrollChangeListener) null);
+                }
+            }
+        });
+    }
+
+    @Nullable
+    private static NestedScrollView homepageScroll(View start) {
+        ViewParent parent = start.getParent();
+        while (parent instanceof View) {
+            if (parent instanceof NestedScrollView) {
+                return (NestedScrollView) parent;
+            }
+            parent = parent.getParent();
+        }
+        return null;
+    }
+
     private void relayoutHomepageGrid() {
         final RecyclerView recyclerView = getListView();
         if (recyclerView == null) {
@@ -226,6 +275,9 @@ public class MikuTopLevelSettings extends TopLevelSettings {
                 break;
             }
             parent = parent.getParent();
+        }
+        if (mAdapter != null) {
+            mAdapter.scheduleViewportPass();
         }
     }
 

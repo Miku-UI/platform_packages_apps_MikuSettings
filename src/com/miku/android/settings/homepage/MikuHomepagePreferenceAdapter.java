@@ -16,6 +16,7 @@
 
 package com.miku.android.settings.homepage;
 
+import android.animation.ValueAnimator;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BlendModeColorFilter;
@@ -31,12 +32,16 @@ import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.ArraySet;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.core.widget.NestedScrollView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -51,10 +56,20 @@ import com.android.settings.SettingsActivity;
 import com.android.settings.homepage.HighlightableMenu;
 import com.android.settingslib.widget.AdaptiveIcon;
 import com.miku.android.settings.R;
+import com.miku.android.settings.widget.MikuHomepageCard;
+
+import java.util.ArrayList;
+import java.util.Comparator;
 
 final class MikuHomepagePreferenceAdapter extends PreferenceGroupAdapter {
 
     private final MikuTopLevelSettings mFragment;
+    private final ArraySet<String> mPlayedEntrance = new ArraySet<>();
+    private final ArrayList<MikuHomepageCard> mViewportBatch = new ArrayList<>();
+    private final Rect mCardRect = new Rect();
+    private final Rect mScrollRect = new Rect();
+    private final int[] mLocation = new int[2];
+    private final Runnable mViewportPass = this::onViewportChanged;
     private String mHighlightKey;
     private String mHiddenKey;
     private int mHighlightPosition = RecyclerView.NO_POSITION;
@@ -196,6 +211,108 @@ final class MikuHomepagePreferenceAdapter extends PreferenceGroupAdapter {
                 && preference != null
                 && TextUtils.equals(mHighlightKey, preference.getKey());
         itemView.setActivated(highlight);
+        if (itemView instanceof MikuHomepageCard) {
+            bindEntrance((MikuHomepageCard) itemView, preference, position);
+        }
+    }
+
+    private void bindEntrance(MikuHomepageCard card, Preference preference, int position) {
+        final String key = entranceKey(preference, position);
+        final Object running = card.getTag(R.id.miku_homepage_card);
+        if (key.equals(running) && card.isEntrancePlaying()) {
+            return;
+        }
+        card.setTag(R.id.miku_homepage_card, key);
+        if (mPlayedEntrance.contains(key) || !ValueAnimator.areAnimatorsEnabled()) {
+            card.resetEntrance();
+            return;
+        }
+        card.hideForEntrance();
+        scheduleViewportPass();
+    }
+
+    void onViewportChanged() {
+        final RecyclerView recyclerView = mFragment.getListView();
+        if (recyclerView == null || !ValueAnimator.areAnimatorsEnabled()) {
+            return;
+        }
+        final NestedScrollView scroll = homepageScroll(recyclerView);
+        if (scroll == null || !scroll.getGlobalVisibleRect(mScrollRect)) {
+            return;
+        }
+        mViewportBatch.clear();
+        final int childCount = recyclerView.getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            final View child = recyclerView.getChildAt(i);
+            if (!(child instanceof MikuHomepageCard)
+                    || child.getVisibility() != View.VISIBLE
+                    || !child.isLaidOut()
+                    || !child.isAttachedToWindow()
+                    || child.getWidth() <= 0
+                    || child.getHeight() <= 0
+                    || recyclerView.getChildAdapterPosition(child) == RecyclerView.NO_POSITION) {
+                continue;
+            }
+            final MikuHomepageCard card = (MikuHomepageCard) child;
+            final Object key = card.getTag(R.id.miku_homepage_card);
+            if (!(key instanceof String)
+                    || mPlayedEntrance.contains(key)
+                    || card.isEntrancePlaying()
+                    || !isInHomepageViewport(card, scroll)) {
+                continue;
+            }
+            mViewportBatch.add(card);
+        }
+        mViewportBatch.sort(Comparator.comparingInt(card -> {
+            final int position = recyclerView.getChildAdapterPosition(card);
+            return position == RecyclerView.NO_POSITION ? Integer.MAX_VALUE : position;
+        }));
+        for (int i = 0; i < mViewportBatch.size(); i++) {
+            final MikuHomepageCard card = mViewportBatch.get(i);
+            final Object key = card.getTag(R.id.miku_homepage_card);
+            if (key instanceof String) {
+                mPlayedEntrance.add((String) key);
+            }
+            card.playEntrance(i);
+        }
+    }
+
+    void scheduleViewportPass() {
+        final RecyclerView recyclerView = mFragment.getListView();
+        if (recyclerView == null) {
+            return;
+        }
+        recyclerView.removeCallbacks(mViewportPass);
+        recyclerView.post(mViewportPass);
+    }
+
+    private boolean isInHomepageViewport(View card, NestedScrollView scroll) {
+        card.getLocationOnScreen(mLocation);
+        mCardRect.set(mLocation[0], mLocation[1],
+                mLocation[0] + card.getWidth(), mLocation[1] + card.getHeight());
+        if (scroll == null) {
+            return mCardRect.height() > 0 && mCardRect.width() > 0;
+        }
+        return mCardRect.intersect(mScrollRect);
+    }
+
+    @Nullable
+    private static NestedScrollView homepageScroll(View start) {
+        ViewParent parent = start.getParent();
+        while (parent instanceof View) {
+            if (parent instanceof NestedScrollView) {
+                return (NestedScrollView) parent;
+            }
+            parent = parent.getParent();
+        }
+        return null;
+    }
+
+    private static String entranceKey(Preference preference, int position) {
+        if (preference != null && !TextUtils.isEmpty(preference.getKey())) {
+            return preference.getKey();
+        }
+        return "pos:" + position;
     }
 
     private int getHighlightPosition() {
