@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright 2026 Miku UI
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+          http://www.apache.org/licenses/LICENSE-2.0
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+<resources>
+    <string name="miku_device_info_model">Model</string>
+    <string name="miku_device_info_version">Miku UI version</string>
+    <string name="miku_device_info_cpu" translatable="false">CPU</string>
+    <string name="miku_device_info_ram" translatable="false">RAM</string>
+    <string name="miku_device_info_display">Display</string>
+    <string name="miku_device_info_battery">Battery</string>
+    <string name="miku_device_info_kernel">Kernel</string>
+    <string name="miku_device_info_security">SPL</string>
+    <string name="miku_device_info_selinux" translatable="false">SELinux</string>
+    <string name="miku_device_info_maintainer" translatable="false">Master</string>
+    <string name="miku_device_info_ram_value">%d GB</string>
+    <string name="miku_device_info_battery_value">%d mAh</string>
+    <string name="miku_device_info_display_value">%1$d x %2$d\n%3$dHz</string>
+</resources>

@@ -30,7 +30,7 @@ android_library {
     static_libs: [
         "Settings-core",
     ],
-    resource_dirs: [],
+    resource_dirs: ["res"],
 }
 
 android_app {
