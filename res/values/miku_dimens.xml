@@ -32,4 +32,22 @@
     <dimen name="miku_device_info_title_value_size">13sp</dimen>
     <dimen name="miku_device_info_spec_label_size">17.5sp</dimen>
     <dimen name="miku_device_info_spec_value_size">10sp</dimen>
+
+    <dimen name="miku_homepage_card_min_column_width">156dp</dimen>
+    <dimen name="miku_homepage_card_height">168dp</dimen>
+    <dimen name="miku_homepage_title_line_height">22dp</dimen>
+    <dimen name="miku_homepage_summary_line_height">18dp</dimen>
+    <dimen name="miku_homepage_card_padding">16dp</dimen>
+    <dimen name="miku_homepage_card_radius">20dp</dimen>
+    <dimen name="miku_homepage_icon_well_size">48dp</dimen>
+    <dimen name="miku_homepage_icon_well_radius">14dp</dimen>
+    <dimen name="miku_homepage_icon_size">26dp</dimen>
+    <dimen name="miku_homepage_text_margin_top">12dp</dimen>
+    <dimen name="miku_homepage_summary_margin_top">12dp</dimen>
+    <dimen name="miku_homepage_grid_padding">10dp</dimen>
+    <dimen name="miku_homepage_grid_padding_top">2dp</dimen>
+    <dimen name="miku_homepage_grid_padding_bottom">22dp</dimen>
+    <dimen name="miku_homepage_grid_gap">12dp</dimen>
+    <dimen name="miku_homepage_title_size">16sp</dimen>
+    <dimen name="miku_homepage_summary_size">12sp</dimen>
 </resources>

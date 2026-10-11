@@ -50,4 +50,19 @@
     <style name="Widget.MikuDeviceInfo.SpecItem.SecondRow" parent="Widget.MikuDeviceInfo.SpecItem">
         <item name="android:layout_marginTop">@dimen/miku_device_info_specs_row_gap</item>
     </style>
+    <style name="TextAppearance.MikuHomepage.Title" parent="@android:style/TextAppearance.DeviceDefault">
+        <item name="android:textSize">@dimen/miku_homepage_title_size</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:lineHeight">@dimen/miku_homepage_title_line_height</item>
+    </style>
+    <style name="TextAppearance.MikuHomepage.Summary" parent="@android:style/TextAppearance.DeviceDefault">
+        <item name="android:textSize">@dimen/miku_homepage_summary_size</item>
+        <item name="android:textColor">?android:attr/textColorSecondary</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:lineHeight">@dimen/miku_homepage_summary_line_height</item>
+    </style>
 </resources>

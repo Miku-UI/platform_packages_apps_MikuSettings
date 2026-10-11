@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Copyright (C) 2026 Miku UI
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+         http://www.apache.org/licenses/LICENSE-2.0
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<com.miku.android.settings.widget.MikuHomepageCard
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/miku_homepage_card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/miku_homepage_card_bg"
+    android:foreground="@drawable/miku_homepage_card_ripple"
+    android:stateListAnimator="@animator/miku_homepage_card_press"
+    android:clipToOutline="true"
+    android:outlineProvider="background"
+    android:clickable="true"
+    android:focusable="true"
+    android:scrollbars="none"
+    android:overScrollMode="never"
+    android:isScrollContainer="false">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="@dimen/miku_homepage_card_padding"
+        android:duplicateParentState="true">
+
+        <FrameLayout
+            android:id="@+id/icon_frame"
+            android:layout_width="@dimen/miku_homepage_icon_well_size"
+            android:layout_height="@dimen/miku_homepage_icon_well_size"
+            android:background="@drawable/miku_homepage_icon_well_bg"
+            android:clipToOutline="true"
+            android:outlineProvider="background">
+
+            <androidx.preference.internal.PreferenceImageView
+                android:id="@android:id/icon"
+                android:layout_width="@dimen/miku_homepage_icon_size"
+                android:layout_height="@dimen/miku_homepage_icon_size"
+                android:layout_gravity="center"
+                android:maxWidth="@dimen/miku_homepage_icon_size"
+                android:maxHeight="@dimen/miku_homepage_icon_size"
+                android:scaleType="fitCenter" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:id="@+id/text_frame"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/miku_homepage_text_margin_top"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@android:id/title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textAlignment="viewStart"
+                android:textAppearance="@style/TextAppearance.MikuHomepage.Title" />
+
+            <TextView
+                android:id="@android:id/summary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/miku_homepage_summary_margin_top"
+                android:ellipsize="end"
+                android:minLines="2"
+                android:maxLines="2"
+                android:scrollbars="none"
+                android:overScrollMode="never"
+                android:textAlignment="viewStart"
+                android:textAppearance="@style/TextAppearance.MikuHomepage.Summary" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/alert_frame"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|top"
+        android:layout_margin="@dimen/miku_homepage_card_padding"
+        android:minWidth="24dp"
+        android:minHeight="24dp"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/alert_unnumbered"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_gravity="center"
+            android:contentDescription="@null"
+            android:scaleType="fitCenter"
+            android:src="@drawable/circle"
+            android:tint="@color/settingslib_materialColorPrimary" />
+
+        <FrameLayout
+            android:id="@+id/alert_numbered_frame"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:minWidth="24dp"
+            android:minHeight="24dp">
+
+            <ImageView
+                android:id="@+id/alert_number_bg"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:contentDescription="@null"
+                android:scaleType="fitCenter"
+                android:src="@drawable/circle"
+                android:tint="@color/settingslib_materialColorSecondaryContainer" />
+
+            <TextView
+                android:id="@+id/alert_number_fg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textColor="@color/settingslib_materialColorOnSecondaryContainer"
+                style="@style/TextAppearance.SettingsLib.TitleMedium" />
+        </FrameLayout>
+    </FrameLayout>
+</com.miku.android.settings.widget.MikuHomepageCard>

@@ -17,7 +17,14 @@
 package com.miku.android.settings;
 
 import com.android.settings.SettingsApplication;
+import com.android.settings.homepage.TopLevelSettings;
+import com.miku.android.settings.homepage.MikuTopLevelSettings;
 
 /** Settings application entry for the MikuSettings variant. */
 public class MikuSettingsApplication extends SettingsApplication {
+
+    @Override
+    public TopLevelSettings createTopLevelSettings() {
+        return new MikuTopLevelSettings();
+    }
 }
